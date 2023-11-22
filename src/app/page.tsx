@@ -1,33 +1,40 @@
 "use client"
 import Image from "next/image"
+import { IconContext } from "react-icons"
+import { FaRegUser } from "react-icons/fa6"
 import { signIn, useSession } from "next-auth/react"
 import Nav from "./components/Nav"
+import Layout from "./components/Layout"
 
 export default function Home() {
-  const { data: session, status } = useSession()
-
-  if (!session) {
-    return (
-      <div className="bg-sky-900 h-screen w-screen flex items-center">
-        <div className="text-center w-full">
-          <button
-            onClick={() => signIn("google")}
-            className="bg-white p-2 px-4 rounded-lg"
-          >
-            Login with Google
-          </button>
-          <div>{"status:" + status}</div>
-          <div>{"session:" + session}</div>
-        </div>
-      </div>
-    )
-  }
+  const { data: session } = useSession()
+  const name = session?.user?.name ?? ""
+  const image = session?.user?.image ?? ""
   return (
-    <div className="bg-sky-900 min-h-screen flex">
-      <Nav />
-      <div className="bg-white flex-grow m-2 ml-0 rounded-lg p-4">
-        Hello! {session.user?.email}
-      </div>
-    </div>
+    <Layout>
+      <IconContext.Provider
+        value={{
+          color: "black",
+          size: "20px",
+          style: {
+            marginTop: 4,
+          },
+        }}
+      >
+        <div className='text-sky-900 flex justify-between'>
+          <h2>
+            Hello, <strong> {name}</strong>
+          </h2>
+          <div className='flex bg-gray-300 gap-1 text-black rounded-lg overflow-hidden'>
+            {image ? (
+              <img src={image} alt='' className='w-6 h-6' />
+            ) : (
+              <FaRegUser />
+            )}
+            <span className='px-2 '>{name}</span>
+          </div>
+        </div>
+      </IconContext.Provider>
+    </Layout>
   )
 }
