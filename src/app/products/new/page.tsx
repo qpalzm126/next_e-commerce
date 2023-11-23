@@ -1,13 +1,36 @@
 "use client"
-import { useState } from "react"
+import { FormEvent, useState } from "react"
 import Layout from "../../components/Layout"
+import axios from "axios"
+import { useRouter } from "next/navigation"
 
 export default function NewProduct() {
+  const router = useRouter()
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
   const [price, setPrice] = useState("")
-  function createProduct() {
-    axios.post("/")
+  const [goToProducts, setGoToProducts] = useState(false)
+
+  async function createProduct(e: FormEvent) {
+    e.preventDefault()
+    const data: ProductType = { title, description, price }
+    await fetch("/api/products", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then(() => console.log("ok then"))
+      .catch((r) => console.log(r))
+    // await axios
+    //   .post("/api/products", data)
+    //   .then(() => console.log("okok"))
+    //   .catch((r) => console.log(r))
+    setGoToProducts(true)
+  }
+  if (goToProducts) {
+    // router.push("/products")
   }
 
   return (
@@ -40,4 +63,10 @@ export default function NewProduct() {
       </form>
     </Layout>
   )
+}
+
+interface ProductType {
+  title: String
+  description: String | null
+  price: String
 }
