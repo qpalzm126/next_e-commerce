@@ -2,31 +2,37 @@ import { MongoClient } from "mongodb"
 import { mongooseConnect } from "../../lib/mongoose"
 import { Product } from "../../models/products"
 import mongoose from "mongoose"
-import { NextApiRequest, NextApiResponse } from "next"
+import { NextRequest, NextResponse } from "next/server"
 
-export async function POST(req: NextApiRequest, res: NextApiResponse) {
-  const { method } = req
-  console.log("mm", method)
+export async function GET(req: NextRequest) {
+  const searchParams = req.nextUrl.searchParams
+  const id = searchParams.get("id") ?? ""
+  // const id = req.nextUrl.searchParams.get("_id") ?? ""
+  if (id) {
+    const res = await Product.findOne({ _id: id })
+    return NextResponse.json(res)
+  } else {
+    const res = await Product.find()
+    return NextResponse.json(res)
+  }
+}
+
+export async function POST(req: NextRequest) {
+  const body = await req.json()
   await mongooseConnect()
-  // try {
-  //   await mongoose.connect(process.env.MONGODB_URI ?? "", {
-  //     dbName: "products",
-  //   })
-  // } catch (error) {
-  //   console.log(error)
-  // }
+  await Product.create({
+    ...body,
+  })
 
-  if (method === "GET") {
-    console.log("GET daze!")
-  }
-  if (method === "POST") {
-    const { title, description, price } = req.body
-    const productDoc = await Product.create({
-      title,
-      description,
-      price,
-    })
+  return NextResponse.json({ body })
+}
+export async function PUT(req: NextRequest) {
+  const searchParams = req.nextUrl.searchParams
+  const id = searchParams.get("id") ?? ""
+  const { title, description, price, _id } = await req.json()
 
-    res.json(productDoc)
-  }
+  await mongooseConnect()
+  await Product.updateOne({ _id }, { title, description, price })
+
+  return NextResponse.json(true)
 }

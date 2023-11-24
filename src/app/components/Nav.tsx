@@ -50,7 +50,7 @@ export default function Nav() {
           Dashboard
         </Link>
         <Link
-          href={"./products"}
+          href={"/products"}
           className={pathname.includes("/products") ? activeLink : inactiveLink}
         >
           <svg
@@ -70,7 +70,7 @@ export default function Nav() {
           Products
         </Link>
         <Link
-          href={"./orders"}
+          href={"/orders"}
           className={pathname.includes("/orders") ? activeLink : inactiveLink}
         >
           <svg
@@ -90,7 +90,7 @@ export default function Nav() {
           Orders
         </Link>
         <Link
-          href={"./settings"}
+          href={"/settings"}
           className={pathname.includes("/settings") ? activeLink : inactiveLink}
         >
           <svg
