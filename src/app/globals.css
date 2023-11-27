@@ -42,5 +42,5 @@ table.basic tr td{
   @apply border border-y-gray-200 p-1;
 }
 table.basic a{
-  @apply bg-sky-800 text-white text-sm px-2 py-1 rounded-md inline-flex gap-1
+  @apply bg-sky-800 text-white text-sm px-2 py-1 rounded-md inline-flex gap-1 mr-1
 }

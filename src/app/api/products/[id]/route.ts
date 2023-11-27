@@ -8,7 +8,6 @@ export async function GET(
   const json = {}
   if (id) {
     const res = await Product.findOne({ _id: id })
-    console.log(res)
     return NextResponse.json(res)
   }
 

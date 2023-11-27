@@ -20,18 +20,18 @@ export default function ProductForm({
     const data: ProductType = { title, description, price }
     if (_id) {
       await axios
-        .put("./api/products", { ...data, _id })
+        .put("/api/products", { ...data, _id })
         .catch((r) => console.error("something wrong!"))
     } else {
       await axios
         .post("/api/products", data)
         .catch((r) => console.error("something wrong!"))
-      setGoToProducts(true)
-      if (goToProducts) {
-        router.push("/products")
-        setGoToProducts(false)
-      }
     }
+    setGoToProducts(true)
+  }
+  if (goToProducts) {
+    router.push("/products")
+    setGoToProducts(false)
   }
   return (
     <form onSubmit={saveProduct}>

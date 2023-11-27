@@ -26,13 +26,12 @@ export async function POST(req: NextRequest) {
 
   return NextResponse.json({ body })
 }
+
 export async function PUT(req: NextRequest) {
-  const searchParams = req.nextUrl.searchParams
-  const id = searchParams.get("id") ?? ""
   const { title, description, price, _id } = await req.json()
 
   await mongooseConnect()
   await Product.updateOne({ _id }, { title, description, price })
 
-  return NextResponse.json(true)
+  return NextResponse.json({ title, description, price, _id })
 }
