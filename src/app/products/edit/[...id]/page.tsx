@@ -10,7 +10,7 @@ export default function EditProductPage({
 }: {
   params: { id: string }
 }) {
-  const [productInfo, setProductInfo] = useState<ProductType>(null)
+  const [productInfo, setProductInfo] = useState<ProductType | null>(null)
   const id = params.id
   useEffect(() => {
     if (!id) return

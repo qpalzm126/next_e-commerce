@@ -35,3 +35,12 @@ export async function PUT(req: NextRequest) {
 
   return NextResponse.json({ title, description, price, _id })
 }
+
+export async function DELETE(req: NextRequest) {
+  const searchParams = req.nextUrl.searchParams
+  const id = searchParams.get("id") ?? ""
+  if (id) {
+    await Product.deleteOne({ _id: id })
+  }
+  return NextResponse.json({ id })
+}
