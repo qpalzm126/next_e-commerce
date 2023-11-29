@@ -28,12 +28,12 @@ export async function POST(req: NextRequest) {
 }
 
 export async function PUT(req: NextRequest) {
-  const { title, description, price, _id } = await req.json()
+  const { title, description, price, images, _id } = await req.json()
 
   await mongooseConnect()
-  await Product.updateOne({ _id }, { title, description, price })
+  await Product.updateOne({ _id }, { title, description, price, images })
 
-  return NextResponse.json({ title, description, price, _id })
+  return NextResponse.json({ title, description, price, _id, images })
 }
 
 export async function DELETE(req: NextRequest) {

@@ -1,5 +1,5 @@
 "use client"
-import React from "react"
+import React, { useEffect } from "react"
 import { FormEvent, useState } from "react"
 import axios from "axios"
 import { useRouter } from "next/navigation"
@@ -17,18 +17,21 @@ export default function ProductForm({
   const [images, setImages] = useState(existingImages || [])
   const [price, setPrice] = useState(existingPrice || "")
   const [goToProducts, setGoToProducts] = useState(false)
+  useEffect(() => {
+    console.log(images)
+  }, [images])
 
   async function saveProduct(e: FormEvent) {
     e.preventDefault()
-    const data: ProductType = { title, description, price }
+    const data: ProductType = { title, description, price, images }
     if (_id) {
       await axios
         .put("/api/products", { ...data, _id })
-        .catch((r) => console.error("something wrong!"))
+        .catch((r) => console.error("Edit product wrong!"))
     } else {
       await axios
-        .post("/api/products", data)
-        .catch((r) => console.error("something wrong!"))
+        .post("/api/products", { ...data })
+        .catch((r) => console.error("Create product wrong!"))
     }
     setGoToProducts(true)
   }
@@ -47,7 +50,7 @@ export default function ProductForm({
 
       const res = await axios.post("/api/upload", data)
       setImages((oldImages) => {
-        return [...oldImages, res.data.links]
+        return [...oldImages, ...res.data.links]
       })
     }
   }
@@ -61,7 +64,22 @@ export default function ProductForm({
         onChange={(e) => setTitle(e.target.value)}
       />
       <label>Photos</label>
-      <div className='mb-2'>
+      <div className='mb-2 flex flex-wrap gap-2'>
+        {!!images?.length &&
+          images.map((link) =>
+            link ? (
+              <div key={link} className='h-24'>
+                <img
+                  src={link}
+                  alt='image'
+                  // referrerPolicy='no-referrer'
+                  className='rounded-md'
+                />
+              </div>
+            ) : (
+              false
+            )
+          )}
         <label className='w-24 h-24 border cursor-pointer text-center flex items-center justify-center text-sm gap-1 text-gray-500 rounded-lg bg-gray-200'>
           <svg
             xmlns='http://www.w3.org/2000/svg'

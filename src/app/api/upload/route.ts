@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
   if (!files) {
     return NextResponse.json({ error: "No files received." }, { status: 400 })
   }
-
+  console.log("files:", files)
   const client = new S3Client({
     region: "ap-southeast-2",
     credentials: {
@@ -32,6 +32,7 @@ export async function POST(req: NextRequest) {
     } catch (error) {
       console.log("Error occured ", error)
     }
+
     client.send(
       new PutObjectCommand({
         Bucket: bucketName,
@@ -41,6 +42,7 @@ export async function POST(req: NextRequest) {
         // ContentType: mime.lookup(filepath),
       })
     )
+
     const link = `https://${bucketName}.s3.amazonaws.com/${filename}`
     links.push(link)
   }
