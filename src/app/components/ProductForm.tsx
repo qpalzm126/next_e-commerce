@@ -9,11 +9,12 @@ export default function ProductForm({
   title: existingTitle,
   description: existingDescription,
   price: existingPrice,
-  images,
+  images: existingImages,
 }: ProductType) {
   const router = useRouter()
   const [title, setTitle] = useState(existingTitle || "")
   const [description, setDescription] = useState(existingDescription || "")
+  const [images, setImages] = useState(existingImages || [])
   const [price, setPrice] = useState(existingPrice || "")
   const [goToProducts, setGoToProducts] = useState(false)
 
@@ -44,12 +45,10 @@ export default function ProductForm({
         data.append("file", file)
       }
 
-      const res = await axios.post("/api/upload", data, {
-        // headers: {
-        //   "Content-Type": "multipart/formdata",
-        // },
+      const res = await axios.post("/api/upload", data)
+      setImages((oldImages) => {
+        return [...oldImages, res.data.links]
       })
-      console.log(res.data)
     }
   }
   return (
@@ -108,5 +107,6 @@ export interface ProductType {
   _id?: string
   title: string
   description: string | null
+  images: Array<string>
   price: string
 }
