@@ -1,13 +1,13 @@
 import { MongoClient } from "mongodb"
 import { mongooseConnect } from "../../lib/mongoose"
-import { Product } from "../../models/products"
+import { Product } from "../../models/Products"
 import mongoose from "mongoose"
 import { NextRequest, NextResponse } from "next/server"
 
 export async function GET(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams
   const id = searchParams.get("id") ?? ""
-  // const id = req.nextUrl.searchParams.get("_id") ?? ""
+
   if (id) {
     const res = await Product.findOne({ _id: id })
     return NextResponse.json(res)
