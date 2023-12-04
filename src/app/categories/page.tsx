@@ -2,12 +2,14 @@
 import { FormEvent, useEffect, useState } from "react"
 import Layout from "../components/Layout"
 import axios from "axios"
+import { withSwal } from "react-sweetalert2"
 
-export default function Categories() {
+export function Categories({ swal }) {
   const [editedCategory, setEditedCategory] = useState(null)
   const [name, setName] = useState("")
   const [parentCategory, setParentCategory] = useState("")
   const [categories, setCategories] = useState([])
+  const [properties, setProperties] = useState([])
   useEffect(() => {
     fetchCategories()
   }, [])
@@ -16,7 +18,7 @@ export default function Categories() {
     e.preventDefault()
     const data = { name, parentCategory }
 
-    if (editCategory) {
+    if (editedCategory) {
       data._id = editCategory._id
       await axios.put("/api/categories", { ...data })
       setEditedCategory(null)
