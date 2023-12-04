@@ -44,6 +44,26 @@ export function Categories({ swal }) {
       }))
     )
   }
+
+  function deleteCategory(category) {
+    swal
+      .fire({
+        title: "Are you sure?",
+        text: `Do you want to delete ${category.name}?`,
+        showCancelButton: true,
+        cancelButtonText: "Cancel",
+        confirmButtonText: "Yes, Delete!",
+        confirmButtonColor: "#d55",
+        reverseButtons: false,
+      })
+      .then(async (res: any) => {
+        if (res.isConfirmed) {
+          const { _id } = category
+          await axios.delete("/api/categories?_id=" + _id)
+          fetchCategories()
+        }
+      })
+  }
   return (
     <Layout>
       <h1>Categories</h1>
@@ -98,7 +118,7 @@ export function Categories({ swal }) {
                     Edit
                   </button>
                   <button
-                    // onClick={() => deleteCategory(category)}
+                    onClick={() => deleteCategory(category)}
                     className='btn-red'
                   >
                     Delete
@@ -111,5 +131,5 @@ export function Categories({ swal }) {
     </Layout>
   )
 }
-
+export default withSwal(({ swal }, ref) => <Categories swal={swal} />)
 interface CategoriesType {}

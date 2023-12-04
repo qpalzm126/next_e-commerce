@@ -10,10 +10,11 @@ const bucketName = "llecommerce"
 export async function POST(req: NextRequest) {
   const formData = await req.formData()
   const files = formData.getAll("file")
+  const links = []
   if (!files) {
     return NextResponse.json({ error: "No files received." }, { status: 400 })
   }
-  console.log("files:", files)
+
   const client = new S3Client({
     region: "ap-southeast-2",
     credentials: {
@@ -21,7 +22,7 @@ export async function POST(req: NextRequest) {
       secretAccessKey: process.env.S3_SECRET_ACCESS_KEY ?? "",
     },
   })
-  const links = []
+
   for (const file of files) {
     const buffer = Buffer.from(await file.arrayBuffer())
     const filename = Date.now() + file.name.replaceAll(" ", "_")

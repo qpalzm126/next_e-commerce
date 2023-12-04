@@ -33,3 +33,14 @@ export async function PUT(req: NextRequest) {
 
   return NextResponse.json(res)
 }
+
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: { _id: string } }
+) {
+  const _id = params._id
+  if (_id) {
+    await Category.deleteOne({ _id })
+  }
+  return NextResponse.json({ _id })
+}
