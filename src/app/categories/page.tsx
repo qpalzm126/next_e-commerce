@@ -30,7 +30,10 @@ export function Categories({ swal }) {
     fetchCategories()
   }
   function fetchCategories() {
-    axios.get("/api/categories").then((r) => setCategories(r.data))
+    axios.get("/api/categories").then((r) => {
+      console.log(r.data)
+      setCategories(r.data)
+    })
   }
 
   function editCategory(category) {
@@ -132,4 +135,7 @@ export function Categories({ swal }) {
   )
 }
 export default withSwal(({ swal }, ref) => <Categories swal={swal} />)
-interface CategoriesType {}
+export interface CategoryType {
+  name: { type: String; require: true }
+  parent: { name: String; parent: String }
+}

@@ -12,7 +12,9 @@ export default function ProductForm({
   description: existingDescription,
   price: existingPrice,
   images: existingImages,
-}: ProductType) {
+  category: assignedCategory,
+}: // properties: assignedProperties,
+ProductType) {
   const router = useRouter()
   const [title, setTitle] = useState(existingTitle || "")
   const [description, setDescription] = useState(existingDescription || "")
@@ -21,14 +23,18 @@ export default function ProductForm({
   const [goToProducts, setGoToProducts] = useState(false)
   const [isUploading, setIsUploading] = useState(false)
   const [imageUploaded, setImageUploaded] = useState(false)
+  const [category, setCategory] = useState(assignedCategory || "")
+  const [categories, setCategories] = useState([])
 
   useEffect(() => {
-    console.log(images)
-  }, [images])
+    axios.get("/api/categories").then((res) => {
+      setCategories(res.data)
+    })
+  }, [])
 
   async function saveProduct(e: FormEvent) {
     e.preventDefault()
-    const data: ProductType = { title, description, price, images }
+    const data: ProductType = { title, description, price, images, category }
     if (_id) {
       await axios
         .put("/api/products", { ...data, _id })
@@ -68,8 +74,9 @@ export default function ProductForm({
     try {
       await axios.get(`${link}`)
     } catch {
-      console.log("image not ready")
-      // checkImageUploaded(link)
+      setTimeout(() => {
+        console.log("image not ready")
+      }, 500)
     }
   }
 
@@ -82,6 +89,16 @@ export default function ProductForm({
         value={title}
         onChange={(e) => setTitle(e.target.value)}
       />
+      <label>Category</label>
+      <select value={category} onChange={(e) => setCategory(e.target.value)}>
+        <option value=''>Uncategorized</option>
+        {categories.length > 0 &&
+          categories.map((c: any) => (
+            <option key={c._id} value={c._id}>
+              {c.name}
+            </option>
+          ))}
+      </select>
       <label>Photos</label>
       <div className='mb-2 flex flex-wrap gap-1'>
         {/* <ReactSortable list={images} setList={}> */}
@@ -150,4 +167,6 @@ export interface ProductType {
   description: string | null
   images: Array<string>
   price: string
+  category: string
+  // properties: string
 }
